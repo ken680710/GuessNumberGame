@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To My Love</title>
+    
+    <!-- Google Fonts - Elegant and Romantic -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== CSS VARIABLES FOR EASY CUSTOMIZATION ===== */
+        :root {
+            --primary-color: #d4758f;
+            --secondary-color: #c85c7a;
+            --accent-color: #f8d4df;
+            --bg-color: #fff5f8;
+            --text-color: #4a2c3d;
+            --light-text: #8b6978;
+            --card-bg: #ffffff;
+            --shadow: 0 8px 32px rgba(200, 92, 122, 0.15);
+            --shadow-hover: 0 12px 48px rgba(200, 92, 122, 0.25);
+        }
+
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #ffe8f0 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ===== INTRO SCREEN STYLES ===== */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            padding: 20px;
+        }
+
+        .intro-screen.fade-out {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        .intro-content {
+            text-align: center;
+            max-width: 800px;
+            animation: introFadeIn 1.5s ease-out;
+        }
+
+        .intro-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+            line-height: 1.3;
+        }
+
+        .intro-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .intro-heart {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 100px;
+            position: relative;
+            animation: heartBeat 1.5s infinite;
+        }
+
+        .intro-heart::before,
+        .intro-heart::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 100px;
+            height: 160px;
+            border-radius: 100px 100px 0 0;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c9519f 100%);
+        }
+
+        .intro-heart::before {
+            left: 50px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .intro-heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .intro-button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 18px 60px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .intro-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            background: #f0f0ff;
+        }
+
+        .intro-button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Floating hearts in intro */
+        .intro-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .intro-hearts .floating-heart {
+            position: absolute;
+            font-size: 30px;
+            color: rgba(255, 107, 157, 0.4);
+            animation: floatUpIntro 8s infinite ease-in;
+        }
+
+        .intro-hearts .floating-heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .intro-hearts .floating-heart:nth-child(2) { left: 20%; animation-delay: 2s; }
+        .intro-hearts .floating-heart:nth-child(3) { left: 30%; animation-delay: 4s; }
+        .intro-hearts .floating-heart:nth-child(4) { left: 40%; animation-delay: 1s; }
+        .intro-hearts .floating-heart:nth-child(5) { left: 50%; animation-delay: 5s; }
+        .intro-hearts .floating-heart:nth-child(6) { left: 60%; animation-delay: 3s; }
+        .intro-hearts .floating-heart:nth-child(7) { left: 70%; animation-delay: 6s; }
+        .intro-hearts .floating-heart:nth-child(8) { left: 80%; animation-delay: 1.5s; }
+
+        @keyframes introFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heartBeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            10%, 30% {
+                transform: scale(1.1);
+            }
+            20%, 40% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes floatUpIntro {
+            0% {
+                bottom: -50px;
+                opacity: 0;
+                transform: translateX(0) rotate(0deg);
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                bottom: 110%;
+                opacity: 0;
+                transform: translateX(30px) rotate(15deg);
+            }
+        }
+
+        /* Hide main content initially */
+        .main-content {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .main-content.show {
+            opacity: 1;
+            pointer-events: all;
+            animation: contentFadeIn 1s ease-out;
+        }
+
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ===== FLOATING HEARTS ANIMATION ===== */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: var(--primary-color);
+            opacity: 0;
+            animation: floatUp 8s infinite ease-in;
+        }
+
+        /* Staggered animation delays for natural floating effect */
+        .heart:nth-child(1) { left: 10%; animation-delay: 0s; font-size: 24px; }
+        .heart:nth-child(2) { left: 20%; animation-delay: 2s; font-size: 18px; }
+        .heart:nth-child(3) { left: 30%; animation-delay: 4s; font-size: 22px; }
+        .heart:nth-child(4) { left: 40%; animation-delay: 1s; font-size: 20px; }
+        .heart:nth-child(5) { left: 50%; animation-delay: 5s; font-size: 26px; }
+        .heart:nth-child(6) { left: 60%; animation-delay: 3s; font-size: 19px; }
+        .heart:nth-child(7) { left: 70%; animation-delay: 6s; font-size: 23px; }
+        .heart:nth-child(8) { left: 80%; animation-delay: 1.5s; font-size: 21px; }
+        .heart:nth-child(9) { left: 90%; animation-delay: 4.5s; font-size: 25px; }
+        .heart:nth-child(10) { left: 15%; animation-delay: 3.5s; font-size: 20px; }
+
+        @keyframes floatUp {
+            0% {
+                bottom: -50px;
+                opacity: 0;
+                transform: translateX(0) rotate(0deg);
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                bottom: 110%;
+                opacity: 0;
+                transform: translateX(30px) rotate(15deg);
+            }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '♥';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            color: var(--primary-color);
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.2); }
+        }
+
+        .hero h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(200, 92, 122, 0.1);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        /* 👉 EDIT THE NAME HERE */
+        .hero h1::before {
+            content: 'To ';
+            font-size: 0.6em;
+            color: var(--light-text);
+        }
+
+        .hero-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--light-text);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+            letter-spacing: 1px;
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== SECTION STYLING ===== */
+        section {
+            margin: 60px 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            margin: 15px auto 0;
+        }
+
+        /* ===== COUNTDOWN SECTION ===== */
+        .countdown-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 50px 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            max-width: 600px;
+            margin: 30px auto 0;
+            position: relative;
+        }
+
+        .countdown-item {
+            background: linear-gradient(135deg, var(--accent-color), #ffeaf2);
+            border-radius: 15px;
+            padding: 25px 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .countdown-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            display: block;
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--light-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        /* ===== PHOTO GALLERY ===== */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            aspect-ratio: 1;
+            background: var(--accent-color);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Placeholder styling for empty gallery items */
+        .gallery-item.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* ===== LOVE NOTE SECTION ===== */
+        .love-note {
+            background: var(--card-bg);
+            border: 3px double var(--primary-color);
+            border-radius: 15px;
+            padding: 50px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: var(--shadow);
+            background-image: 
+                linear-gradient(transparent 95%, var(--accent-color) 95%);
+            background-size: 100% 30px;
+        }
+
+        .love-note::before,
+        .love-note::after {
+            content: '❝';
+            position: absolute;
+            font-size: 80px;
+            color: var(--accent-color);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .love-note::before {
+            top: 20px;
+            left: 20px;
+        }
+
+        .love-note::after {
+            content: '❞';
+            bottom: 10px;
+            right: 20px;
+        }
+
+        .love-note-content {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            line-height: 2;
+            color: var(--text-color);
+            position: relative;
+            z-index: 1;
+            font-style: italic;
+        }
+
+        .love-note-signature {
+            text-align: right;
+            margin-top: 30px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 20px 40px;
+            }
+
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .love-note {
+                padding: 40px 25px;
+            }
+
+            .love-note::before,
+            .love-note::after {
+                font-size: 50px;
+            }
+
+            section {
+                margin: 40px 0;
+            }
+
+            .intro-heart {
+                width: 150px;
+                height: 150px;
+            }
+
+            .intro-heart::before,
+            .intro-heart::after {
+                width: 75px;
+                height: 120px;
+            }
+
+            .intro-heart::before {
+                left: 37.5px;
+            }
+
+            .intro-button {
+                padding: 15px 40px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .intro-heart {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 80px;
+            }
+
+            .intro-heart::before,
+            .intro-heart::after {
+                width: 60px;
+                height: 96px;
+            }
+
+            .intro-heart::before {
+                left: 30px;
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 40px 20px 30px;
+            color: var(--light-text);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .footer-heart {
+            color: var(--primary-color);
+            animation: pulse 2s infinite;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== INTRO SCREEN ===== -->
+    <div class="intro-screen" id="introScreen">
+        <div class="intro-hearts">
+            <div class="floating-heart">♥</div>
+            <div class="floating-heart">♥</div>
+            <div class="floating-heart">♥</div>
+            <div class="floating-heart">♥</div>
+            <div class="floating-heart">♥</div>
+            <div class="floating-heart">♥</div>
+            <div class="floating-heart">♥</div>
+            <div class="floating-heart">♥</div>
+        </div>
+        
+        <div class="intro-content">
+            <h1 class="intro-title">Happy Valentine's Day<br>Ading nako!</h1>
+            <p class="intro-subtitle">Sorry na palangga nako🥺🥺🥺</p>
+            <div class="intro-heart"></div>
+            <p class="intro-subtitle">Smile before you open 😍😍😍</p>
+            <button class="intro-button" onclick="openWebsite()">Open</button>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT (YOUR ORIGINAL WEBSITE) ===== -->
+    <div class="main-content" id="mainContent">
+        <!-- Floating Hearts Background Animation -->
+        <div class="hearts-container">
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+            <div class="heart">♥</div>
+        </div>
+
+        <div class="container">
+            <!-- ===== HERO SECTION ===== -->
+            <header class="hero">
+                <h1>MY ADING</h1> 
+                <p class="hero-subtitle">
+                    Every moment with you is a treasure I hold close to my heart
+                </p>
+            </header>
+
+            <!-- ===== COUNTDOWN SECTION ===== -->
+            <section class="countdown-section">
+                <h2 class="section-title">Our Journey Together</h2>
+                <div class="countdown-grid">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="days">0</span>
+                        <span class="countdown-label">Days</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hours">0</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">0</span>
+                        <span class="countdown-label">Minutes</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="seconds">0</span>
+                        <span class="countdown-label">Seconds</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PHOTO GALLERY ===== -->
+            <section>
+                <h2 class="section-title">Our Moments</h2>
+                <div class="gallery">
+                    <div class="gallery-item placeholder">
+                        <img src="pic1.jpg">
+                    </div>
+                    <div class="gallery-item placeholder">
+                        <img src="pic2.jpg">
+                    </div>
+                    <div class="gallery-item placeholder">
+                        <img src="pic3.jpg">
+                    </div>
+                    <div class="gallery-item placeholder">
+                        <img src="pic4.jpg">
+                    </div>
+                    <div class="gallery-item placeholder">
+                        <img src="pic5.jpg">
+                    </div>
+                    <div class="gallery-item placeholder">
+                        <img src="pic7.jpg">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== LOVE NOTE SECTION ===== -->
+            <section>
+                <h2 class="section-title">A Note From My Heart</h2>
+                <div class="love-note">
+                    <div class="love-note-content">
+                        From the moment I met you, my life changed in the most beautiful way. 
+                        You bring light to my darkest days and make every ordinary moment extraordinary. 
+                        Your smile is my favorite sight, your laugh is my favorite sound, and your 
+                        happiness is my greatest goal. Thank you for being you, for choosing me, 
+                        and for making every day an adventure worth living. I love you more than 
+                        words could ever express, and I can't wait to create a lifetime of memories with you.
+                    </div>
+                    <div class="love-note-signature">
+                        Forever yours EDONG ♥
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== FOOTER ===== -->
+            <footer class="footer">
+                Made with <span class="footer-heart">♥</span> for the most maldita person in the world
+            </footer>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // Function to open the main website
+        function openWebsite() {
+            const introScreen = document.getElementById('introScreen');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Fade out intro screen
+            introScreen.classList.add('fade-out');
+            
+            // Show main content after delay
+            setTimeout(() => {
+                mainContent.classList.add('show');
+            }, 400);
+        }
+
+        // Countdown JavaScript
+        const startDate = new Date('2019-10-07');
+        
+        function updateCountdown() {
+            const now = new Date();
+            const difference = now - startDate;
+            
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
